@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YERI's Data Intelligence & Strategy Dashboard</title>
+    
+    <meta property="og:title" content="YERI's Data Intelligence & Strategy Dashboard">
+    <meta property="og:description" content="석유화학 마켓 인텔리전스, AI 빅테크 동향, 마케팅 전략 분석 대시보드">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --color-canvas: #07090d;
+            --color-surface: #131722;
+            --color-surface-hover: #1a1f2c;
+            --color-ink: #f8fafc;
+            --color-text-gray: #94a3b8;
+            --color-border: #2a3042;
+            --color-neon-green: #34d399;
+            --color-up-red: #f43f5e;
+            --color-down-blue: #60a5fa;
+            --radius-sm: 12px;
+            --radius-lg: 24px;
+            --radius-pill: 999px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 40px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background-color: var(--color-canvas);
+            color: var(--color-ink);
+            margin: 0;
+            padding: var(--space-lg);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .container { max-width: 1080px; margin: 0 auto; }
+
+        .hero-banner {
+            background: radial-gradient(circle at 50% 20%, #172026 0%, #11151c 60%, #07090d 100%);
+            color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 48px 40px 36px 40px;
+            margin-bottom: var(--space-xl);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .hero-top-tag {
+            font-size: 11.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-neon-green);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .hero-hologram-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            margin: 10px 0 16px 0;
+            backdrop-filter: blur(12px);
+        }
+
+        .wave-bars { display: flex; align-items: center; gap: 3px; height: 14px; }
+        .wave-bar {
+            width: 3px; background: var(--color-neon-green); border-radius: 2px;
+            animation: wavePulse 1.2s ease-in-out infinite alternate;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 10px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; height: 14px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.1s; height: 6px; }
+
+        @keyframes wavePulse {
+            0% { transform: scaleY(0.4); opacity: 0.5; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        h1.hero-title {
+            font-family: "Times New Roman", Times, serif, Georgia;
+            font-size: 38px;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+        }
+
+        .hero-desc {
+            font-size: 15px; max-width: 650px; margin: 0 auto 28px auto; font-weight: 600; line-height: 1.5;
+            background: linear-gradient(270deg, #34d399, #60a5fa, #f43f5e, #34d399);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: neonShine 6s ease infinite;
+        }
+
+        @keyframes neonShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .time-float-left {
+            position: absolute; top: 24px; left: 24px;
+            background: rgba(19, 23, 34, 0.85);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            padding: 8px 16px; border-radius: var(--radius-sm);
+            font-size: 11.5px; text-align: left; backdrop-filter: blur(8px);
+            line-height: 1.5; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .exchange-float {
+            position: absolute; top: 24px; right: 24px;
+            background: rgba(19, 23, 34, 0.85);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            padding: 8px 16px; border-radius: var(--radius-sm);
+            font-size: 12px; text-align: right; backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .hero-bottom-area {
+            display: flex; align-items: center; justify-content: center;
+            position: relative; border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 24px; flex-wrap: wrap; gap: 12px;
+        }
+
+        .hero-tab-menu { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        .global-refresh-btn {
+            position: absolute; right: 0;
+            background: rgba(52, 211, 153, 0.15); color: var(--color-neon-green);
+            border: 1px solid rgba(52, 211, 153, 0.4); padding: 10px 18px;
+            border-radius: var(--radius-pill); font-size: 13.5px; font-weight: 700;
+            cursor: pointer; backdrop-filter: blur(8px); transition: all 0.25s ease;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .global-refresh-btn:hover {
+            background: var(--color-neon-green); color: #07090d;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.4); transform: translateY(-1px);
+        }
+
+        @media (max-width: 950px) {
+            .global-refresh-btn { position: static; margin-top: 8px; }
+        }
+
+        .tab-btn {
+            padding: 10px 22px; font-size: 14px; font-weight: 600; color: var(--color-text-gray);
+            background: rgba(255, 255, 255, 0.04); border: 1px solid var(--color-border);
+            border-radius: var(--radius-pill); cursor: pointer; transition: all 0.25s ease; white-space: nowrap;
+        }
+        .tab-btn:hover { color: var(--color-neon-green); border-color: rgba(52, 211, 153, 0.5); background: rgba(52, 211, 153, 0.05); }
+        .tab-btn.active {
+            background-color: var(--color-neon-green); color: #07090d;
+            border-color: var(--color-neon-green); font-weight: 700;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.4);
+        }
+
+        .tab-content { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .tab-content.active { display: block; opacity: 1; }
+
+        .feature-card {
+            background: var(--color-surface); border-radius: var(--radius-lg);
+            padding: var(--space-lg); margin-bottom: var(--space-xl);
+            border: 1px solid var(--color-border); box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .section-badge-title {
+            display: inline-flex; align-items: center; background: var(--color-surface);
+            color: var(--color-neon-green); padding: 8px 18px; border-radius: var(--radius-pill);
+            font-size: 13.5px; font-weight: 700; margin-bottom: var(--space-md);
+            border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .box-title {
+            display: flex; align-items: center; font-size: 15px; font-weight: 700; color: #ffffff;
+            margin-top: var(--space-lg); margin-bottom: var(--space-sm); padding: 10px 14px;
+            background: #090c12; border-radius: var(--radius-sm); border-left: 3px solid var(--color-neon-green);
+            border-top: 1px solid var(--color-border); border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);
+        }
+
+        .marquee-wrapper { position: relative; width: 100%; overflow: hidden; margin-bottom: var(--space-xl); padding: 10px 0; }
+        .marquee-track { display: flex; gap: 16px; width: max-content; animation: scrollMarquee 35s linear infinite; }
+        .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
+        @keyframes scrollMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .stock-card, .market-item-card {
+            background: var(--color-surface); border-radius: var(--radius-sm);
+            padding: var(--space-md); border: 1px solid var(--color-border);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4); width: 240px; flex-shrink: 0;
+            transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
+        }
+        .stock-card:hover, .market-item-card:hover { transform: translateY(-3px); border-color: var(--color-neon-green); background-color: var(--color-surface-hover); }
+
+        .stock-index-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: var(--space-xl); }
+        @media (max-width: 850px) { .stock-index-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .card {
+            background: var(--color-surface); border-radius: var(--radius-sm); padding: var(--space-md);
+            border: 1px solid var(--color-border); box-shadow: 0 6px 16px rgba(0,0,0,0.4); transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover { border-color: rgba(52, 211, 153, 0.5); transform: translateY(-2px); }
+
+        .card-title { font-size: 15.5px; color: #ffffff; font-weight: 800; margin-bottom: 6px; }
+        .card-value { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .change-up { color: var(--color-up-red); font-size: 12px; font-weight: 700; }
+        .change-down { color: var(--color-down-blue); font-size: 12px; font-weight: 700; }
+
+        .sparkline-container {
+            margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--color-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sparkline-label { font-size: 10.5px; color: var(--color-text-gray); }
+        .sparkline-canvas { width: 100px; height: 24px; }
+
+        .briefing-highlight-box {
+            background: #090c12; border: 1px solid var(--color-border); border-left: 4px solid var(--color-neon-green);
+            border-radius: var(--radius-sm); padding: 16px 18px; margin-bottom: 14px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .briefing-tag {
+            display: inline-block; background: rgba(52, 211, 153, 0.12); color: var(--color-neon-green);
+            font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-pill); margin-bottom: 6px;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+        .briefing-title-text { font-size: 14.5px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .briefing-desc-text { font-size: 13px; color: #cbd5e1; line-height: 1.55; }
+        .briefing-desc-text b { color: var(--color-neon-green); }
+
+        ul { margin: var(--space-sm) 0 var(--space-md) 0; padding-left: 20px; }
+        li { margin-bottom: 8px; font-size: 13.5px; line-height: 1.6; color: #cbd5e1; }
+
+        .trump-card {
+            background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+            padding: var(--space-lg); margin-bottom: var(--space-xl); box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+        }
+        .trump-item { border-bottom: 1px dashed var(--color-border); padding-bottom: var(--space-md); margin-bottom: var(--space-md); }
+        .trump-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+        .trump-date { font-size: 12px; font-weight: 700; color: var(--color-neon-green); margin-bottom: 6px; }
+        .trump-original {
+            font-size: 12.5px; font-style: italic; color: #e2e8f0; background: #090c12; padding: 10px 14px;
+            border-radius: var(--radius-sm); border: 1px solid var(--color-border); margin-bottom: 8px;
+        }
+        .trump-korean { font-size: 13px; font-weight: 500; color: #ffffff; }
+
+        .search-box { display: flex; gap: var(--space-sm); margin-bottom: var(--space-xl); }
+        .search-input {
+            flex: 1; padding: 12px var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--radius-pill);
+            font-size: 14px; background: var(--color-surface); color: #ffffff; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .search-input:focus { border-color: var(--color-neon-green); }
+
+        .button-primary {
+            background-color: var(--color-neon-green); color: #07090d; border: none; padding: 0 28px;
+            border-radius: var(--radius-pill); font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+        }
+        .button-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .stock-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .delete-stock-btn {
+            background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+        }
+        .delete-stock-btn:hover { background: rgba(244, 63, 94, 0.3); }
+
+        .link-btn {
+            color: var(--color-neon-green); text-decoration: none; font-weight: 600; background: rgba(52, 211, 153, 0.1);
+            padding: 4px 10px; border-radius: 6px; font-size: 11.5px; display: inline-block; margin-top: 8px; border: 1px solid rgba(52, 211, 153, 0.25);
+        }
+
+        .news-box {
+            background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+            padding: var(--space-lg); margin-top: var(--space-lg); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; color: #cbd5e1; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--color-border); }
+        th { background: #090c12; font-weight: 700; color: var(--color-neon-green); font-size: 14.5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- 🌌 히어로 배너 -->
+    <div class="hero-banner">
+        <div class="time-float-left">
+            <div style="color: var(--color-text-gray); font-size: 10.5px;">🇺🇸 US Market (EST/EDT)</div>
+            <div id="us-time" style="font-weight: 700; color: var(--color-neon-green); font-size: 12px; margin-bottom: 4px;">--</div>
+            <div style="color: var(--color-text-gray); font-size: 10.5px;">🇰🇷 Korea (KST)</div>
+            <div id="kst-time" style="font-weight: 700; color: #ffffff; font-size: 12px;">--</div>
+        </div>
+
+        <div class="exchange-float">
+            <div id="fx-label" style="color: var(--color-text-gray); font-size: 11px;">USD/KRW 환율 (10/25)</div>
+            <div id="fx-value" style="font-weight: 700; color: #ffffff; font-size: 14px;">1,385.50원 <span style="color: var(--color-up-red);">▲4.20</span></div>
+        </div>
+        
+        <div class="hero-top-tag">Data Specialist & Strategy Intelligence</div>
+        
+        <div class="hero-hologram-badge">
+            <div class="wave-bars">
+                <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; color: var(--color-neon-green); letter-spacing: 0.5px;">PARK YERI &bull; LIVE DASHBOARD</span>
+        </div>
+
+        <h1 class="hero-title">YERI's Data Intelligence</h1>
+        <p class="hero-desc" id="hero-keyword">⚡ 오늘의 키워드: 원가 압박 속 가격 방어와 AI 기반 고부가 스페셜티 전략 시너지</p>
+
+        <div class="hero-bottom-area">
+            <div class="hero-tab-menu">
+                <button class="tab-btn active" onclick="switchTab('market-tab', this)">📊 석유화학 시황 & 리포트</button>
+                <button class="tab-btn" onclick="switchTab('stock-tab', this)">📈 주요 지수 & 관심 주식</button>
+                <button class="tab-btn" onclick="switchTab('english-tab', this)">🗣️ 컨설팅 & 비즈니스 영어</button>
+            </div>
+            <button class="global-refresh-btn" onclick="triggerGlobalRefresh()">
+                🔄 전체 새로고침
+            </button>
+        </div>
+    </div>
+
+    <!-- TAB 1: 석유화학 시황 & 리포트 -->
+    <div id="market-tab" class="tab-content active">
+        
+        <div class="section-badge-title">📌 Today's Key Takeaways (마케팅 및 사업 전략)</div>
+        <div class="feature-card">
+            <div style="margin-bottom: 16px;">
+                <div style="font-weight: 700; font-size: 14.5px; color: var(--color-neon-green); margin-bottom: 4px;">1. 유가 및 원료비 강세 대응 포뮬러 연동 강화</div>
+                <div style="font-size: 13.5px; color: var(--color-text-gray); line-height: 1.55;">
+                    • 고유가 지속에 따른 B2B 고객사 가격 인상 전가 및 포뮬러 계약 비율 확대.<br>
+                    • 원자재 변동 대응 자동화 견적 모델 도입으로 수익성 방어.
+                </div>
+            </div>
+            <hr style="border: none; border-top: 1px solid var(--color-border); margin: 12px 0;">
+            <div style="margin-bottom: 16px;">
+                <div style="font-weight: 700; font-size: 14.5px; color: var(--color-neon-green); margin-bottom: 4px;">2. 범용 제품 수급 둔화 및 고부가 스페셜티 집중</div>
+                <div style="font-size: 13.5px; color: var(--color-text-gray); line-height: 1.55;">
+                    • 올레핀 및 기초유분 원가 압박 장기화에 맞춘 가동률 최적화.<br>
+                    • 데이터 기반 타겟 마케팅을 통한 고부가 소재 제품군 마진 타겟팅.
+                </div>
+            </div>
+            <hr style="border: none; border-top: 1px solid var(--color-border); margin: 12px 0;">
+            <div>
+                <div style="font-weight: 700; font-size: 14.5px; color: var(--color-neon-green); margin-bottom: 4px;">3. AI 기반 인텔리전스 및 사업 전략 효율화</div>
+                <div style="font-size: 13.5px; color: var(--color-text-gray); line-height: 1.55;">
+                    • 엔터프라이즈 AI 솔루션을 통한 모니터링 주기 단축.<br>
+                    • 시장 동향과 글로벌 마켓 인텔리전스를 실시간 연계하여 빠른 의사결정 수립.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-badge-title">📊 핵심 원자재 & 유가 지표 (<span class="asof">2026년 10월 25일</span> 기준)</div>
+        
+        <div class="marquee-wrapper">
+            <div class="marquee-track" id="material-marquee-container"></div>
+        </div>
+
+        <div class="feature-card">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 14px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px; color: #ffffff;">
+                📑 데일리 석유화학 & 원자재 마켓 브리핑 (<span class="asof">2026년 10월 25일</span> 기준)
+            </div>
+
+            <div id="briefing-body">
+            <div class="box-title">1. 핵심 시장 지표 요약 (유가 / 납사 / 스프레드)</div>
+            
+            <div class="briefing-highlight-box">
+                <span class="briefing-tag">KEY INSIGHT 01</span>
+                <div class="briefing-title-text">국제유가 6개월래 최고치 마감 (WTI $103.27 / 브렌트 $116.72)</div>
+                <div class="briefing-desc-text">
+                    WTI 원유 배럴당 $103.27(+3.80%), 브렌트유 $116.72(+3.14%)로 거래 마감. 중동 지정학적 리스크 심화로 국내 석화업계 원료 도입가 부담 가중.
+                </div>
+            </div>
+
+            <div class="briefing-highlight-box">
+                <span class="briefing-tag">KEY INSIGHT 02</span>
+                <div class="briefing-title-text">MOPJ 납사 $942대 고착 및 올레핀 스프레드 압박</div>
+                <div class="briefing-desc-text">
+                    MOPJ 납사는 $942.76으로 고공행진 중이며, 에틸렌-납사 스프레드는 BEP($300) 하회 수준인 $210선 유지로 NCC 크래커 감산 지속.
+                </div>
+            </div>
+
+            <div class="box-title">2. 석유화학 주요 이슈 & 실무 시사점</div>
+
+            <div class="briefing-highlight-box">
+                <span class="briefing-tag">STRATEGY 01</span>
+                <div class="briefing-title-text">원가 대응 및 크래커 가동률 최적화</div>
+                <div class="briefing-desc-text">
+                    • <b>시황:</b> 원가 급등에 비해 더딘 수요 회복으로 감산 기조 유지 불가피.<br>
+                    • <b>대응:</b> 고부가 다운스트림 제품 중심 집중 및 포뮬러 계약 방어.
+                </div>
+            </div>
+
+            <div class="briefing-highlight-box">
+                <span class="briefing-tag">STRATEGY 02</span>
+                <div class="briefing-title-text">스페셜티 및 친환경 포트폴리오 전환</div>
+                <div class="briefing-desc-text">
+                    • <b>시황:</b> 범용 시황 둔화 극복을 위해 고부가가치 소재 중심으로 전환 가속.<br>
+                    • <b>대응:</b> 배터리 소재 및 고기능 엔지니어링 플라스틱 타겟 마케팅 제고.
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: 주요 지수 & 관심 주식 -->
+    <div id="stock-tab" class="tab-content">
+        
+        <!-- 오늘자 글로벌 증시 지수 반영 -->
+        <div class="section-badge-title">🌐 주요 글로벌 증시 지수 (<span class="asof-short">10월 25일</span> 기준)</div>
+        <div class="stock-index-grid" id="index-grid">
+            <div class="card">
+                <div class="card-title">코스피 (KOSPI)</div>
+                <div class="card-value">5,550.30 <span class="change-up">▲ 0.30%</span></div>
+                <div class="sparkline-container">
+                    <span class="sparkline-label">6개월</span>
+                    <canvas class="sparkline-canvas" data-values="5200,5300,5450,5400,5500,5550.3"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">코스닥 (KOSDAQ)</div>
+                <div class="card-value">1,215.42 <span class="change-down">▼ 2.15%</span></div>
+                <div class="sparkline-container">
+                    <span class="sparkline-label">6개월</span>
+                    <canvas class="sparkline-canvas" data-values="1250,1270,1260,1240,1230,1215.42"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">S&P 500 (SPX)</div>
+                <div class="card-value">7,663.43 <span class="change-down">▼ 1.21%</span></div>
+                <div class="sparkline-container">
+                    <span class="sparkline-label">6개월</span>
+                    <canvas class="sparkline-canvas" data-values="7100,7300,7500,7750,7700,7663.43"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">다우 존스 (Dow)</div>
+                <div class="card-value">52,867.98 <span class="change-up">▲ 0.02%</span></div>
+                <div class="sparkline-container">
+                    <span class="sparkline-label">6개월</span>
+                    <canvas class="sparkline-canvas" data-values="49000,50500,51800,52500,52800,52867.98"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오늘자 Truth Social 반영 -->
+        <div class="section-badge-title">🇺🇸 도널드 트럼프 Truth Social 게재글 (<span class="asof">2026년 10월 25일</span> 기준)</div>
+        <div class="trump-card" id="trump-card">
+            <div class="trump-item">
+                <div class="trump-date">📅 2026년 10월 25일 (Truth Social)</div>
+                <div class="trump-original">"Energy independence is the foundation of national security. High oil prices are ruining our economy. We will DRILL, BABY, DRILL and unleash American energy!"</div>
+                <div class="trump-korean">💬 <b>번역:</b> "에너지 자립은 국가 안보의 기초입니다. 높은 유가가 우리 경제를 망치고 있습니다. 석유 채굴(DRILL, BABY, DRILL)을 대폭 늘려 미국 에너지를 해방시킬 것입니다!"</div>
+            </div>
+
+            <div class="trump-item">
+                <div class="trump-date">📅 2026년 10월 24일 (Truth Social)</div>
+                <div class="trump-original">"Our manufacturers and farmers are winning again thanks to strong TARIFFS! We will not let foreign countries take advantage of the United States any longer!"</div>
+                <div class="trump-korean">💬 <b>번역:</b> "강력한 관세 정책 덕분에 미국의 제조업체와 농가들이 다시 승리하고 있습니다! 다른 국가들이 미국을 더 이상 이용하게 두지 않을 것입니다!"</div>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="stock-input" class="search-input" placeholder="새 종목 검색 및 추가 (예: 금호석유, NVIDIA, Chevron)">
+            <button class="button-primary" onclick="addStock()">+ 종목 추가</button>
+        </div>
+
+        <!-- 글로벌 반도체 및 화학/에너지 종목 마퀴 영역 -->
+        <div class="section-badge-title">🌍 글로벌 반도체 & 화학·에너지 대표 종목</div>
+        <div class="marquee-wrapper">
+            <div class="marquee-track" id="petro-stock-container"></div>
+        </div>
+
+        <!-- 글로벌 AI & 빅테크 종목 마퀴 영역 -->
+        <div class="section-badge-title" style="margin-top: 24px;">🤖 글로벌 AI & 빅테크 종목</div>
+        <div class="marquee-wrapper">
+            <div class="marquee-track" id="ai-stock-container"></div>
+        </div>
+
+        <div class="news-box">
+            <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 8px;">📰 글로벌 시장 핵심 동향 및 시사점</div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 13px;" id="news-list">
+                <li>
+                    <b>[글로벌 반도체]</b> TSMC 및 SK하이닉스, AI 가속기 및 차세대 공정 확장 지속 속 미국 증시 조정 영향 연동 
+                    <a href="https://www.google.com/search?query=TSMC+SK하이닉스+주가+뉴스" target="_blank" class="link-btn" style="margin-left: 6px;">기사 검색 🔗</a>
+                </li>
+                <li style="margin-top: 6px;">
+                    <b>[글로벌 에너지]</b> WTI $103 돌파에 따른 엑슨모빌 및 셰브론 등 업스트림 자이언트 실적 모멘텀 부각 
+                    <a href="https://www.google.com/search?query=ExxonMobil+Chevron+oil+news" target="_blank" class="link-btn" style="margin-left: 6px;">기사 검색 🔗</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TAB 3: 컨설팅 & 비즈니스 영어 -->
+    <div id="english-tab" class="tab-content">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <div class="section-badge-title" style="margin-bottom: 0;">🗣️ 맥킨지 & 글로벌 전략 컨설팅 필수 비즈니스 용어</div>
+            <button class="button-primary" style="padding: 10px 20px;" onclick="loadNewVocab()">🔄 새로운 단어로 새로고침</button>
+        </div>
+
+        <div class="feature-card">
+            <div style="font-size: 13.5px; color: var(--color-text-gray); margin-bottom: 14px;">McKinsey, BCG 등 탑티어 컨설팅 및 임원 보고(Executive Reporting)에서 빈번하게 쓰이는 전략 용어입니다.</div>
+            <table>
+                <thead>
+                    <tr><th style="width: 7%;">No</th><th style="width: 25%;">표현 / Term</th><th style="width: 18%;">Pronunciation</th><th style="width: 18%;">뜻 / Meaning</th><th style="width: 32%;">실무 예문 & 해석</th></tr>
+                </thead>
+                <tbody id="vocab-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+/* 브라우저가 저장공간(localStorage)을 막아도 화면이 멈추지 않게 하는 안전장치 */
+(function () {
+    try { localStorage.getItem('x'); } catch (e) {
+        const m = {};
+        try {
+            Object.defineProperty(window, 'localStorage', { value: {
+                getItem: k => (k in m ? m[k] : null),
+                setItem: (k, v) => { m[k] = String(v); },
+                removeItem: k => { delete m[k]; }
+            } });
+        } catch (e2) {}
+    }
+})();
+
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+}
+
+function triggerGlobalRefresh() {
+    const btn = document.querySelector('.global-refresh-btn');
+    if (btn) btn.innerText = "⏳ 갱신 중...";
+    loadDashboardData(() => { if (btn) btn.innerText = "🔄 전체 새로고침"; });
+}
+
+function updateWorldClocks() {
+    const now = new Date();
+    const usOptions = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    document.getElementById('us-time').innerText = new Intl.DateTimeFormat([], usOptions).format(now);
+
+    const krOptions = { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    document.getElementById('kst-time').innerText = new Intl.DateTimeFormat([], krOptions).format(now);
+}
+
+setInterval(updateWorldClocks, 1000);
+
+/* 원자재 데이터 */
+let materialData = [
+    { name: "WTI 원유 (NYMEX)", val: "$103.27", change: "▲ 3.80%", values: "82,85,90,95,99,103.27" },
+    { name: "브렌트유 (ICE)", val: "$116.72", change: "▲ 3.14%", values: "88,92,97,105,112,116.72" },
+    { name: "두바이유 (Dubai Crude)", val: "$111.68", change: "▲ 1.07%", values: "85,89,93,98,108,111.68" },
+    { name: "MOPJ 납사 (CFR Japan)", val: "$942.76", change: "▲ 2.90%", values: "780,810,850,830,910,942.76" },
+    { name: "에틸렌/프로필렌 스프레드", val: "$210 / $185", change: "▼ BEP 조정", values: "290,270,250,230,220,210" }
+];
+
+function renderMaterialMarquee() {
+    const container = document.getElementById('material-marquee-container');
+    if (!container) return;
+    container.innerHTML = "";
+    let doubleList = [...materialData, ...materialData];
+    doubleList.forEach((item) => {
+        const isUp = item.change.includes("▲");
+        const changeClass = isUp ? "change-up" : "change-down";
+        const card = document.createElement('div');
+        card.className = 'market-item-card';
+        card.innerHTML = `
+            <div class="card-title">${item.name}</div>
+            <div class="card-value">${item.val} <span class="${changeClass}">${item.change}</span></div>
+            <div class="sparkline-container">
+                <span class="sparkline-label">6개월 추이</span>
+                <canvas class="sparkline-canvas" data-values="${item.values}"></canvas>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function drawSparklines() {
+    document.querySelectorAll('.sparkline-canvas').forEach(canvas => {
+        const ctx = canvas.getContext('2d');
+        const dataStr = canvas.getAttribute('data-values');
+        if (!dataStr) return;
+        const values = dataStr.split(',').map(Number);
+        canvas.width = 100; canvas.height = 24;
+        const min = Math.min(...values), max = Math.max(...values);
+        const range = max - min === 0 ? 1 : max - min;
+        const stepX = canvas.width / (values.length - 1);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+        values.forEach((val, i) => {
+            const x = i * stepX;
+            const y = canvas.height - ((val - min) / range) * (canvas.height - 6) - 3;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    updateWorldClocks();
+    renderMaterialMarquee();
+    drawSparklines();
+    loadStocksFromStorage();
+    loadNewVocab();
+    loadDashboardData();
+});
+
+/* ✨ 글로벌 반도체 & 석유화학/에너지 대표 종목 (오늘자 기준 반영) */
+const defaultPetroStocks = [
+    { name: "SK하이닉스 (000660)", val: "198,000원", change: "▲ 4.12%", desc: "• HBM4 수율 기대감 및 솔리다임 상장 이슈 반영 반등.", url: "https://search.naver.com/search.naver?query=SK하이닉스+주가" },
+    { name: "TSMC (TSM - 대만)", val: "$288.50", change: "▼ 4.52%", desc: "• 2nm 공정 확장에도 불구하고 미 증시 테크 조정 연동.", url: "https://www.google.com/finance/quote/TSM:NYSE" },
+    { name: "ExxonMobil (XOM - 미국)", val: "$124.80", change: "▲ 1.80%", desc: "• 상류 부문 원유 생산 확대 및 고유가 강세 수혜.", url: "https://www.google.com/finance/quote/XOM:NYSE" },
+    { name: "Chevron (CVX - 미국)", val: "$162.40", change: "▲ 1.25%", desc: "• 유가 $103 돌파에 따른 정제마진 개선 기대감.", url: "https://www.google.com/finance/quote/CVX:NYSE" },
+    { name: "BASF (BAS - 독일)", val: "€48.20", change: "▼ 0.45%", desc: "• 유럽 원가 압박 속 에너지고효율 화학 소재 집중.", url: "https://www.google.com/finance/quote/BAS:ETR" },
+    { name: "LG화학 (051910)", val: "345,500원", change: "▲ 1.32%", desc: "• 고부가가치 스페셜티 소재 포트폴리오 전환 가속화.", url: "https://search.naver.com/search.naver?query=LG화학+주가" }
+];
+
+/* ✨ 글로벌 AI & 빅테크 종목 (오늘자 기준 반영) */
+const defaultAiStocks = [
+    { name: "NVIDIA (NVDA)", val: "$212.21", change: "▼ 4.40%", desc: "• Blackwell 칩 수요 호조에도 빅테크 투자 우려로 일시 조정.", url: "https://www.google.com/finance/quote/NVDA:NASDAQ" },
+    { name: "Alphabet / Google (GOOGL)", val: "$324.22", change: "▼ 3.10%", desc: "• 제미나이(Gemini 2.0) 기업용 API 확장으로 클라우드 호조.", url: "https://www.google.com/finance/quote/GOOGL:NASDAQ" },
+    { name: "Meta Platforms (META)", val: "$648.85", change: "▼ 6.98%", desc: "• AI 데이터센터 추가 투자 계획 발표 후 주가 변동성 확대.", url: "https://www.google.com/finance/quote/META:NASDAQ" },
+    { name: "Microsoft (MSFT)", val: "$428.15", change: "▲ 0.92%", desc: "• Copilot B2B 구독 수익화 증대 및 AI 인프라 구축 다변화.", url: "https://www.google.com/finance/quote/MSFT:NASDAQ" },
+    { name: "Apple (AAPL)", val: "$348.22", change: "▲ 1.20%", desc: "• 온디바이스 AI 신제품 판매 호조로 테크주 조정 속 방어.", url: "https://www.google.com/finance/quote/AAPL:NASDAQ" }
+];
+
+function loadStocksFromStorage() {
+    let petroStocks = JSON.parse(localStorage.getItem('yeris_petro_stocks')) || defaultPetroStocks;
+    let aiStocks = JSON.parse(localStorage.getItem('yeris_ai_stocks')) || defaultAiStocks;
+    renderStocks('petro-stock-container', petroStocks, 'petro');
+    renderStocks('ai-stock-container', aiStocks, 'ai');
+}
+
+function renderStocks(containerId, list, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = "";
+    let doubleList = [...list, ...list];
+    doubleList.forEach((item, index) => {
+        const realIndex = index % list.length;
+        const isUp = item.change.includes("▲");
+        const changeClass = isUp ? "change-up" : "change-down";
+        const card = document.createElement('div');
+        card.className = 'stock-card';
+        card.innerHTML = `
+            <div class="stock-header-row">
+                <div class="card-title">${item.name}</div>
+                <button class="delete-stock-btn" onclick="removeStock('${type}', ${realIndex})">삭제 ✕</button>
+            </div>
+            <div class="card-value">${item.val} <span class="${changeClass}">${item.change}</span></div>
+            <div style="font-size: 12px; margin-top: 6px; color: var(--color-text-gray); line-height: 1.4;">${item.desc}</div>
+            <a href="${item.url}" target="_blank" class="link-btn">관련 링크 🔗</a>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function removeStock(type, index) {
+    if (!confirm("해당 종목을 관심 목록에서 삭제하시겠습니까?")) return;
+    let storageKey = type === 'petro' ? 'yeris_petro_stocks' : 'yeris_ai_stocks';
+    let list = JSON.parse(localStorage.getItem(storageKey)) || (type === 'petro' ? defaultPetroStocks : defaultAiStocks);
+    list.splice(index, 1);
+    localStorage.setItem(storageKey, JSON.stringify(list));
+    loadStocksFromStorage();
+}
+
+function addStock() {
+    var input = document.getElementById('stock-input');
+    var stockName = input.value.trim();
+    if (!stockName) return alert("종목명을 입력하세요!");
+    var isAI = /ai|gemini|gpt|meta|nvidia|google|apple/i.test(stockName);
+    let storageKey = isAI ? 'yeris_ai_stocks' : 'yeris_petro_stocks';
+    let defaultList = isAI ? defaultAiStocks : defaultPetroStocks;
+    let list = JSON.parse(localStorage.getItem(storageKey)) || defaultList;
+    var searchUrl = "https://search.naver.com/search.naver?query=" + encodeURIComponent(stockName + " 주가 뉴스");
+    list.unshift({
+        name: stockName + " (관심종목)", val: "실시간 조회", change: "▲ 0.00%",
+        desc: "• " + stockName + " 관련 최근 시장 시황 및 주요 뉴스 모니터링 중입니다.", url: searchUrl
+    });
+    localStorage.setItem(storageKey, JSON.stringify(list));
+    input.value = "";
+    loadStocksFromStorage();
+    alert("[" + stockName + "] 종목이 관심 목록에 저장되었습니다!");
+}
+
+const masterVocabPool = [
+    { term: "Value Driver", pron: "밸류 드라이버", meaning: "가치 동인", example: "Identify the core value drivers for growth. (성장을 위한 핵심 가치 동인 식별)" },
+    { term: "Bottom-line Impact", pron: "바텀라인 임팩트", meaning: "최종 손익 영향", example: "This initiative has a direct bottom-line impact. (본 이니셔티브는 최종 손익에 직결됨)" },
+    { term: "Go-to-Market (GTM)", pron: "고 투 마켓", meaning: "시장 진출 전략", example: "We are revising our GTM strategy for Asia. (아시아 시장 진출 전략 수정 중)" },
+    { term: "Core Competency", pron: "코어 컴피턴시", meaning: "핵심 역량", example: "Focus heavily on our core competencies. (당사 핵심 역량에 집중 투자)" },
+    { term: "Synergy Realization", pron: "시너지 리얼라이제이션", meaning: "시너지 실현", example: "Ensure fast synergy realization post-merger. (합병 후 신속한 시너지 실현 확보)" },
+    { term: "Run-rate Optimization", pron: "런레이트 옵티미제이션", meaning: "연간 환산 최적화", example: "Execute run-rate cost optimization. (연간 환산 비용 최적화 실행)" },
+    { term: "Strategic Pivot", pron: "스트라테직 피벗", meaning: "전략적 전환", example: "The company made a bold strategic pivot. (회사는 대담한 전략적 전환을 단행함)" },
+    { term: "Best Practice", pron: "베스트 프랙티스", meaning: "모범 사례", example: "Benchmark industry best practices. (업계 모범 사례 벤치마킹)" },
+    { term: "Portfolio Rationalization", pron: "포트폴리오 래셔널라이제이션", meaning: "포트폴리오 합리화", example: "Accelerate portfolio rationalization for margin. (마진 개선을 위한 포트폴리오 합리화 가속)" },
+    { term: "Executive Summary", pron: "엑제큐티브 서머리", meaning: "요약 보고", example: "Prepare a concise executive summary. (간결한 임원 보고용 요약본 작성)" }
+];
+
+function loadNewVocab() {
+    var tbody = document.getElementById('vocab-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    let shuffled = [...masterVocabPool].sort(() => 0.5 - Math.random());
+    let selected = shuffled.slice(0, 10);
+    selected.forEach((item, index) => {
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td><b style="font-size: 14.5px; color: #ffffff;">${item.term}</b></td>
+            <td style="color: var(--color-neon-green); font-weight: 500;">${item.pron}</td>
+            <td>${item.meaning}</td>
+            <td>${item.example}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+/* ===== 자동 갱신: Apps Script가 매일 저장해 둔 최신 데이터를 불러와 화면에 덮어쓰기 ===== */
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : '#'; }
+function arrow(c) {
+    c = String(c == null ? '' : c).trim();
+    if (/[▲▼]/.test(c)) return c;
+    return (/^[-−]/.test(c) ? '▼ ' : '▲ ') + c.replace(/^[+\-−]\s*/, '');
+}
+function spark(v) {
+    const s = (Array.isArray(v) ? v.join(',') : String(v || '')).replace(/[^0-9.,\-]/g, '');
+    return s.split(',').filter(Boolean).length >= 2 ? s : '0,0';
+}
+function cleanQuote(m) { return { name: esc(m.name), val: esc(m.val), change: esc(arrow(m.change)), values: spark(m.values) }; }
+function cleanStocks(list) {
+    return list.map(s => ({
+        name: esc(s.name), val: esc(s.val), change: esc(arrow(s.change)),
+        desc: '• ' + esc(String(s.desc || '').replace(/^•\s*/, '')), url: esc(safeUrl(s.url))
+    }));
+}
+function mergeUserStocks(key, fresh) {
+    let mine = [];
+    try { mine = (JSON.parse(localStorage.getItem(key)) || []).filter(s => String(s.name).includes('(관심종목)')); } catch (e) {}
+    try { localStorage.setItem(key, JSON.stringify([...mine, ...fresh])); } catch (e) {}
+}
+
+function loadDashboardData(done) {
+    /* 파일로 직접 열었을 때(구글 웹앱이 아닐 때)는 기존 기본값을 그대로 보여줘요 */
+    if (!(window.google && google.script && google.script.run)) { if (done) done(); return; }
+    google.script.run
+        .withSuccessHandler(d => { try { applyDashboardData(d); } catch (e) { console.error(e); } if (done) done(); })
+        .withFailureHandler(() => { if (done) done(); })
+        .getDashboardData();
+}
+
+function applyDashboardData(d) {
+    if (!d) return;
+    document.querySelectorAll('.asof').forEach(e => e.textContent = d.dateLabel);
+    document.querySelectorAll('.asof-short').forEach(e => e.textContent = d.dateShort);
+    if (d.keyword) document.getElementById('hero-keyword').textContent = '⚡ 오늘의 키워드: ' + d.keyword;
+
+    if (d.fx && d.fx.val) {
+        const ch = arrow(d.fx.change);
+        document.getElementById('fx-label').textContent = 'USD/KRW 환율 (' + d.dateSlash + ')';
+        document.getElementById('fx-value').innerHTML = esc(d.fx.val) + ' <span style="color: var(' +
+            (/▼/.test(ch) ? '--color-down-blue' : '--color-up-red') + ');">' + esc(ch) + '</span>';
+    }
+
+    if (Array.isArray(d.materials) && d.materials.length) {
+        materialData = d.materials.map(cleanQuote);
+        renderMaterialMarquee();
+    }
+
+    if (Array.isArray(d.indices) && d.indices.length) {
+        document.getElementById('index-grid').innerHTML = d.indices.map(cleanQuote).map(x => `
+            <div class="card">
+                <div class="card-title">${x.name}</div>
+                <div class="card-value">${x.val} <span class="${x.change.includes('▲') ? 'change-up' : 'change-down'}">${x.change}</span></div>
+                <div class="sparkline-container">
+                    <span class="sparkline-label">6개월</span>
+                    <canvas class="sparkline-canvas" data-values="${x.values}"></canvas>
+                </div>
+            </div>`).join('');
+    }
+
+    if (Array.isArray(d.petroStocks) && d.petroStocks.length) mergeUserStocks('yeris_petro_stocks', cleanStocks(d.petroStocks));
+    if (Array.isArray(d.aiStocks) && d.aiStocks.length) mergeUserStocks('yeris_ai_stocks', cleanStocks(d.aiStocks));
+    loadStocksFromStorage();
+
+    if (Array.isArray(d.insights) && d.insights.length && Array.isArray(d.strategies)) {
+        const box = (tag, title, desc) => `
+            <div class="briefing-highlight-box">
+                <span class="briefing-tag">${tag}</span>
+                <div class="briefing-title-text">${title}</div>
+                <div class="briefing-desc-text">${desc}</div>
+            </div>`;
+        let h = '<div class="box-title">1. 핵심 시장 지표 요약 (유가 / 납사 / 스프레드)</div>';
+        d.insights.forEach((x, i) => { h += box('KEY INSIGHT 0' + (i + 1), esc(x.title), esc(x.desc)); });
+        h += '<div class="box-title">2. 석유화학 주요 이슈 & 실무 시사점</div>';
+        d.strategies.forEach((x, i) => {
+            h += box('STRATEGY 0' + (i + 1), esc(x.title), '• <b>시황:</b> ' + esc(x.market) + '<br>• <b>대응:</b> ' + esc(x.response));
+        });
+        document.getElementById('briefing-body').innerHTML = h;
+    }
+
+    if (Array.isArray(d.trump)) {
+        document.getElementById('trump-card').innerHTML = d.trump.length ? d.trump.map(t => `
+            <div class="trump-item">
+                <div class="trump-date">📅 ${esc(t.date)} (Truth Social)</div>
+                <div class="trump-original">"${esc(t.original)}"</div>
+                <div class="trump-korean">💬 <b>번역:</b> "${esc(t.korean)}" <a href="${esc(safeUrl(t.url))}" target="_blank" class="link-btn">원문 🔗</a></div>
+            </div>`).join('') : '<div class="trump-item"><div class="trump-korean">출처가 확인된 새 게시글이 없습니다.</div></div>';
+    }
+
+    if (Array.isArray(d.news) && d.news.length) {
+        document.getElementById('news-list').innerHTML = d.news.map((n, i) =>
+            `<li${i ? ' style="margin-top: 6px;"' : ''}><b>[${esc(n.tag)}]</b> ${esc(n.text)} <a href="${esc(safeUrl(n.url))}" target="_blank" class="link-btn" style="margin-left: 6px;">기사 보기 🔗</a></li>`
+        ).join('');
+    }
+
+    drawSparklines();
+}
+
+</script>
+
+</body>
+</html>
