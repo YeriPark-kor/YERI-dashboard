@@ -301,8 +301,8 @@
         </div>
 
         <div class="exchange-float">
-            <div id="fx-label" style="color: var(--color-text-gray); font-size: 11px;">USD/KRW 환율 (10/25)</div>
-            <div id="fx-value" style="font-weight: 700; color: #ffffff; font-size: 14px;">1,385.50원 <span style="color: var(--color-up-red);">▲4.20</span></div>
+            <div id="fx-label" style="color: var(--color-text-gray); font-size: 11px;">USD/KRW 실시간 환율</div>
+            <div id="fx-value" style="font-weight: 700; color: #ffffff; font-size: 14px;">로딩 중...</div>
         </div>
         
         <div class="hero-top-tag">Data Specialist & Strategy Intelligence</div>
@@ -315,7 +315,7 @@
         </div>
 
         <h1 class="hero-title">YERI's Data Intelligence</h1>
-        <p class="hero-desc" id="hero-keyword">⚡ 오늘의 키워드: 원가 압박 속 가격 방어와 AI 기반 고부가 스페셜티 전략 시너지</p>
+        <p class="hero-desc" id="hero-keyword">⚡ 오늘의 키워드: 구글 시트 기반 100% 실시간 마켓 인텔리전스</p>
 
         <div class="hero-bottom-area">
             <div class="hero-tab-menu">
@@ -323,8 +323,8 @@
                 <button class="tab-btn" onclick="switchTab('stock-tab', this)">📈 주요 지수 & 관심 주식</button>
                 <button class="tab-btn" onclick="switchTab('english-tab', this)">🗣️ 컨설팅 & 비즈니스 영어</button>
             </div>
-            <button class="global-refresh-btn" onclick="triggerGlobalRefresh()">
-                🔄 전체 새로고침
+            <button class="global-refresh-btn" onclick="fetchLiveSheetData()">
+                🔄 실시간 시세 갱신
             </button>
         </div>
     </div>
@@ -359,7 +359,7 @@
             </div>
         </div>
 
-        <div class="section-badge-title">📊 핵심 원자재 & 유가 지표 (<span class="asof">2026년 10월 25일</span> 기준)</div>
+        <div class="section-badge-title">📊 핵심 원자재 & 유가 지표</div>
         
         <div class="marquee-wrapper">
             <div class="marquee-track" id="material-marquee-container"></div>
@@ -367,7 +367,7 @@
 
         <div class="feature-card">
             <div style="font-size: 17px; font-weight: 700; margin-bottom: 14px; border-bottom: 1px solid var(--color-border); padding-bottom: 10px; color: #ffffff;">
-                📑 데일리 석유화학 & 원자재 마켓 브리핑 (<span class="asof">2026년 10월 25일</span> 기준)
+                📑 데일리 석유화학 & 원자재 마켓 브리핑
             </div>
 
             <div id="briefing-body">
@@ -415,56 +415,23 @@
     <!-- TAB 2: 주요 지수 & 관심 주식 -->
     <div id="stock-tab" class="tab-content">
         
-        <!-- 오늘자 글로벌 증시 지수 반영 -->
-        <div class="section-badge-title">🌐 주요 글로벌 증시 지수 (<span class="asof-short">10월 25일</span> 기준)</div>
+        <div class="section-badge-title">🌐 주요 글로벌 증시 지수 (구글 시트 연동)</div>
         <div class="stock-index-grid" id="index-grid">
             <div class="card">
                 <div class="card-title">코스피 (KOSPI)</div>
-                <div class="card-value">5,550.30 <span class="change-up">▲ 0.30%</span></div>
-                <div class="sparkline-container">
-                    <span class="sparkline-label">6개월</span>
-                    <canvas class="sparkline-canvas" data-values="5200,5300,5450,5400,5500,5550.3"></canvas>
-                </div>
+                <div class="card-value" id="val-kospi">로딩 중...</div>
             </div>
             <div class="card">
-                <div class="card-title">코스닥 (KOSDAQ)</div>
-                <div class="card-value">1,215.42 <span class="change-down">▼ 2.15%</span></div>
-                <div class="sparkline-container">
-                    <span class="sparkline-label">6개월</span>
-                    <canvas class="sparkline-canvas" data-values="1250,1270,1260,1240,1230,1215.42"></canvas>
-                </div>
+                <div class="card-title">S&P 500</div>
+                <div class="card-value" id="val-sp500">로딩 중...</div>
             </div>
             <div class="card">
-                <div class="card-title">S&P 500 (SPX)</div>
-                <div class="card-value">7,663.43 <span class="change-down">▼ 1.21%</span></div>
-                <div class="sparkline-container">
-                    <span class="sparkline-label">6개월</span>
-                    <canvas class="sparkline-canvas" data-values="7100,7300,7500,7750,7700,7663.43"></canvas>
-                </div>
+                <div class="card-title">애플 주가</div>
+                <div class="card-value" id="val-apple">로딩 중...</div>
             </div>
             <div class="card">
                 <div class="card-title">다우 존스 (Dow)</div>
-                <div class="card-value">52,867.98 <span class="change-up">▲ 0.02%</span></div>
-                <div class="sparkline-container">
-                    <span class="sparkline-label">6개월</span>
-                    <canvas class="sparkline-canvas" data-values="49000,50500,51800,52500,52800,52867.98"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- 오늘자 Truth Social 반영 -->
-        <div class="section-badge-title">🇺🇸 도널드 트럼프 Truth Social 게재글 (<span class="asof">2026년 10월 25일</span> 기준)</div>
-        <div class="trump-card" id="trump-card">
-            <div class="trump-item">
-                <div class="trump-date">📅 2026년 10월 25일 (Truth Social)</div>
-                <div class="trump-original">"Energy independence is the foundation of national security. High oil prices are ruining our economy. We will DRILL, BABY, DRILL and unleash American energy!"</div>
-                <div class="trump-korean">💬 <b>번역:</b> "에너지 자립은 국가 안보의 기초입니다. 높은 유가가 우리 경제를 망치고 있습니다. 석유 채굴(DRILL, BABY, DRILL)을 대폭 늘려 미국 에너지를 해방시킬 것입니다!"</div>
-            </div>
-
-            <div class="trump-item">
-                <div class="trump-date">📅 2026년 10월 24일 (Truth Social)</div>
-                <div class="trump-original">"Our manufacturers and farmers are winning again thanks to strong TARIFFS! We will not let foreign countries take advantage of the United States any longer!"</div>
-                <div class="trump-korean">💬 <b>번역:</b> "강력한 관세 정책 덕분에 미국의 제조업체와 농가들이 다시 승리하고 있습니다! 다른 국가들이 미국을 더 이상 이용하게 두지 않을 것입니다!"</div>
+                <div class="card-value" id="val-dow">로딩 중...</div>
             </div>
         </div>
 
@@ -521,7 +488,7 @@
 </div>
 
 <script>
-/* 브라우저가 저장공간(localStorage)을 막아도 화면이 멈추지 않게 하는 안전장치 */
+/* 💡 브라우저 저장공간 안전장치 */
 (function () {
     try { localStorage.getItem('x'); } catch (e) {
         const m = {};
@@ -542,12 +509,6 @@ function switchTab(tabId, btn) {
     btn.classList.add('active');
 }
 
-function triggerGlobalRefresh() {
-    const btn = document.querySelector('.global-refresh-btn');
-    if (btn) btn.innerText = "⏳ 갱신 중...";
-    loadDashboardData(() => { if (btn) btn.innerText = "🔄 전체 새로고침"; });
-}
-
 function updateWorldClocks() {
     const now = new Date();
     const usOptions = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
@@ -559,7 +520,38 @@ function updateWorldClocks() {
 
 setInterval(updateWorldClocks, 1000);
 
-/* 원자재 데이터 */
+/* ✨ 구글 시트 웹 게시 CSV 링크 자동 파싱 */
+function fetchLiveSheetData() {
+    // 💡 주신 pubhtml 링크를 자바스크립트용 CSV 추출 URL로 변환하여 적용
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTFj_2Ip_c-NdNOUMUc0hIen6aByWvE8en-7lbzsgpNMRXEGO5QsW9Nvgv1MwOGC3Ngt_ryeusxjDNP/pub?output=csv";
+
+    fetch(CSV_URL)
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split("\n").map(row => row.split(",").map(cell => cell.replace(/"/g, "").trim()));
+            
+            // 시트 B열(인덱스 1번) 수치 매핑 (1행~6행 순서)
+            const usdkrw = rows[0] && rows[0][1] ? rows[0][1] : "--";
+            const kospi = rows[1] && rows[1][1] ? rows[1][1] : "--";
+            const sp500 = rows[2] && rows[2][1] ? rows[2][1] : "--";
+            const apple = rows[3] && rows[3][1] ? rows[3][1] : "--";
+            const dow = rows[5] && rows[5][1] ? rows[5][1] : "--";
+
+            // 우측 상단 환율 갱신
+            document.getElementById('fx-value').innerText = usdkrw + " 원";
+
+            // 증시 지수 탭 수치 갱신
+            if(document.getElementById('val-kospi')) document.getElementById('val-kospi').innerText = kospi;
+            if(document.getElementById('val-sp500')) document.getElementById('val-sp500').innerText = sp500;
+            if(document.getElementById('val-apple')) document.getElementById('val-apple').innerText = "$" + apple;
+            if(document.getElementById('val-dow')) document.getElementById('val-dow').innerText = dow;
+        })
+        .catch(err => {
+            console.error("실시간 시세 로드 실패:", err);
+        });
+}
+
+/* 원자재 마퀴 및 기타 화면 설정 */
 let materialData = [
     { name: "WTI 원유 (NYMEX)", val: "$103.27", change: "▲ 3.80%", values: "82,85,90,95,99,103.27" },
     { name: "브렌트유 (ICE)", val: "$116.72", change: "▲ 3.14%", values: "88,92,97,105,112,116.72" },
@@ -618,26 +610,20 @@ window.addEventListener('DOMContentLoaded', () => {
     drawSparklines();
     loadStocksFromStorage();
     loadNewVocab();
-    loadDashboardData();
+    fetchLiveSheetData(); // 🚀 구글 시트 실시간 환율 및 지수 가져오기
 });
 
-/* ✨ 글로벌 반도체 & 석유화학/에너지 대표 종목 (오늘자 기준 반영) */
 const defaultPetroStocks = [
     { name: "SK하이닉스 (000660)", val: "198,000원", change: "▲ 4.12%", desc: "• HBM4 수율 기대감 및 솔리다임 상장 이슈 반영 반등.", url: "https://search.naver.com/search.naver?query=SK하이닉스+주가" },
     { name: "TSMC (TSM - 대만)", val: "$288.50", change: "▼ 4.52%", desc: "• 2nm 공정 확장에도 불구하고 미 증시 테크 조정 연동.", url: "https://www.google.com/finance/quote/TSM:NYSE" },
     { name: "ExxonMobil (XOM - 미국)", val: "$124.80", change: "▲ 1.80%", desc: "• 상류 부문 원유 생산 확대 및 고유가 강세 수혜.", url: "https://www.google.com/finance/quote/XOM:NYSE" },
-    { name: "Chevron (CVX - 미국)", val: "$162.40", change: "▲ 1.25%", desc: "• 유가 $103 돌파에 따른 정제마진 개선 기대감.", url: "https://www.google.com/finance/quote/CVX:NYSE" },
-    { name: "BASF (BAS - 독일)", val: "€48.20", change: "▼ 0.45%", desc: "• 유럽 원가 압박 속 에너지고효율 화학 소재 집중.", url: "https://www.google.com/finance/quote/BAS:ETR" },
-    { name: "LG화학 (051910)", val: "345,500원", change: "▲ 1.32%", desc: "• 고부가가치 스페셜티 소재 포트폴리오 전환 가속화.", url: "https://search.naver.com/search.naver?query=LG화학+주가" }
+    { name: "Chevron (CVX - 미국)", val: "$162.40", change: "▲ 1.25%", desc: "• 유가 $103 돌파에 따른 정제마진 개선 기대감.", url: "https://www.google.com/finance/quote/CVX:NYSE" }
 ];
 
-/* ✨ 글로벌 AI & 빅테크 종목 (오늘자 기준 반영) */
 const defaultAiStocks = [
     { name: "NVIDIA (NVDA)", val: "$212.21", change: "▼ 4.40%", desc: "• Blackwell 칩 수요 호조에도 빅테크 투자 우려로 일시 조정.", url: "https://www.google.com/finance/quote/NVDA:NASDAQ" },
     { name: "Alphabet / Google (GOOGL)", val: "$324.22", change: "▼ 3.10%", desc: "• 제미나이(Gemini 2.0) 기업용 API 확장으로 클라우드 호조.", url: "https://www.google.com/finance/quote/GOOGL:NASDAQ" },
-    { name: "Meta Platforms (META)", val: "$648.85", change: "▼ 6.98%", desc: "• AI 데이터센터 추가 투자 계획 발표 후 주가 변동성 확대.", url: "https://www.google.com/finance/quote/META:NASDAQ" },
-    { name: "Microsoft (MSFT)", val: "$428.15", change: "▲ 0.92%", desc: "• Copilot B2B 구독 수익화 증대 및 AI 인프라 구축 다변화.", url: "https://www.google.com/finance/quote/MSFT:NASDAQ" },
-    { name: "Apple (AAPL)", val: "$348.22", change: "▲ 1.20%", desc: "• 온디바이스 AI 신제품 판매 호조로 테크주 조정 속 방어.", url: "https://www.google.com/finance/quote/AAPL:NASDAQ" }
+    { name: "Microsoft (MSFT)", val: "$428.15", change: "▲ 0.92%", desc: "• Copilot B2B 구독 수익화 증대 및 AI 인프라 구축 다변화.", url: "https://www.google.com/finance/quote/MSFT:NASDAQ" }
 ];
 
 function loadStocksFromStorage() {
@@ -703,13 +689,7 @@ const masterVocabPool = [
     { term: "Value Driver", pron: "밸류 드라이버", meaning: "가치 동인", example: "Identify the core value drivers for growth. (성장을 위한 핵심 가치 동인 식별)" },
     { term: "Bottom-line Impact", pron: "바텀라인 임팩트", meaning: "최종 손익 영향", example: "This initiative has a direct bottom-line impact. (본 이니셔티브는 최종 손익에 직결됨)" },
     { term: "Go-to-Market (GTM)", pron: "고 투 마켓", meaning: "시장 진출 전략", example: "We are revising our GTM strategy for Asia. (아시아 시장 진출 전략 수정 중)" },
-    { term: "Core Competency", pron: "코어 컴피턴시", meaning: "핵심 역량", example: "Focus heavily on our core competencies. (당사 핵심 역량에 집중 투자)" },
-    { term: "Synergy Realization", pron: "시너지 리얼라이제이션", meaning: "시너지 실현", example: "Ensure fast synergy realization post-merger. (합병 후 신속한 시너지 실현 확보)" },
-    { term: "Run-rate Optimization", pron: "런레이트 옵티미제이션", meaning: "연간 환산 최적화", example: "Execute run-rate cost optimization. (연간 환산 비용 최적화 실행)" },
-    { term: "Strategic Pivot", pron: "스트라테직 피벗", meaning: "전략적 전환", example: "The company made a bold strategic pivot. (회사는 대담한 전략적 전환을 단행함)" },
-    { term: "Best Practice", pron: "베스트 프랙티스", meaning: "모범 사례", example: "Benchmark industry best practices. (업계 모범 사례 벤치마킹)" },
-    { term: "Portfolio Rationalization", pron: "포트폴리오 래셔널라이제이션", meaning: "포트폴리오 합리화", example: "Accelerate portfolio rationalization for margin. (마진 개선을 위한 포트폴리오 합리화 가속)" },
-    { term: "Executive Summary", pron: "엑제큐티브 서머리", meaning: "요약 보고", example: "Prepare a concise executive summary. (간결한 임원 보고용 요약본 작성)" }
+    { term: "Core Competency", pron: "코어 컴피턴시", meaning: "핵심 역량", example: "Focus heavily on our core competencies. (당사 핵심 역량에 집중 투자)" }
 ];
 
 function loadNewVocab() {
@@ -730,110 +710,6 @@ function loadNewVocab() {
         tbody.appendChild(tr);
     });
 }
-/* ===== 자동 갱신: Apps Script가 매일 저장해 둔 최신 데이터를 불러와 화면에 덮어쓰기 ===== */
-function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
-function safeUrl(u) { return /^https?:\/\//i.test(u || '') ? u : '#'; }
-function arrow(c) {
-    c = String(c == null ? '' : c).trim();
-    if (/[▲▼]/.test(c)) return c;
-    return (/^[-−]/.test(c) ? '▼ ' : '▲ ') + c.replace(/^[+\-−]\s*/, '');
-}
-function spark(v) {
-    const s = (Array.isArray(v) ? v.join(',') : String(v || '')).replace(/[^0-9.,\-]/g, '');
-    return s.split(',').filter(Boolean).length >= 2 ? s : '0,0';
-}
-function cleanQuote(m) { return { name: esc(m.name), val: esc(m.val), change: esc(arrow(m.change)), values: spark(m.values) }; }
-function cleanStocks(list) {
-    return list.map(s => ({
-        name: esc(s.name), val: esc(s.val), change: esc(arrow(s.change)),
-        desc: '• ' + esc(String(s.desc || '').replace(/^•\s*/, '')), url: esc(safeUrl(s.url))
-    }));
-}
-function mergeUserStocks(key, fresh) {
-    let mine = [];
-    try { mine = (JSON.parse(localStorage.getItem(key)) || []).filter(s => String(s.name).includes('(관심종목)')); } catch (e) {}
-    try { localStorage.setItem(key, JSON.stringify([...mine, ...fresh])); } catch (e) {}
-}
-
-function loadDashboardData(done) {
-    /* 파일로 직접 열었을 때(구글 웹앱이 아닐 때)는 기존 기본값을 그대로 보여줘요 */
-    if (!(window.google && google.script && google.script.run)) { if (done) done(); return; }
-    google.script.run
-        .withSuccessHandler(d => { try { applyDashboardData(d); } catch (e) { console.error(e); } if (done) done(); })
-        .withFailureHandler(() => { if (done) done(); })
-        .getDashboardData();
-}
-
-function applyDashboardData(d) {
-    if (!d) return;
-    document.querySelectorAll('.asof').forEach(e => e.textContent = d.dateLabel);
-    document.querySelectorAll('.asof-short').forEach(e => e.textContent = d.dateShort);
-    if (d.keyword) document.getElementById('hero-keyword').textContent = '⚡ 오늘의 키워드: ' + d.keyword;
-
-    if (d.fx && d.fx.val) {
-        const ch = arrow(d.fx.change);
-        document.getElementById('fx-label').textContent = 'USD/KRW 환율 (' + d.dateSlash + ')';
-        document.getElementById('fx-value').innerHTML = esc(d.fx.val) + ' <span style="color: var(' +
-            (/▼/.test(ch) ? '--color-down-blue' : '--color-up-red') + ');">' + esc(ch) + '</span>';
-    }
-
-    if (Array.isArray(d.materials) && d.materials.length) {
-        materialData = d.materials.map(cleanQuote);
-        renderMaterialMarquee();
-    }
-
-    if (Array.isArray(d.indices) && d.indices.length) {
-        document.getElementById('index-grid').innerHTML = d.indices.map(cleanQuote).map(x => `
-            <div class="card">
-                <div class="card-title">${x.name}</div>
-                <div class="card-value">${x.val} <span class="${x.change.includes('▲') ? 'change-up' : 'change-down'}">${x.change}</span></div>
-                <div class="sparkline-container">
-                    <span class="sparkline-label">6개월</span>
-                    <canvas class="sparkline-canvas" data-values="${x.values}"></canvas>
-                </div>
-            </div>`).join('');
-    }
-
-    if (Array.isArray(d.petroStocks) && d.petroStocks.length) mergeUserStocks('yeris_petro_stocks', cleanStocks(d.petroStocks));
-    if (Array.isArray(d.aiStocks) && d.aiStocks.length) mergeUserStocks('yeris_ai_stocks', cleanStocks(d.aiStocks));
-    loadStocksFromStorage();
-
-    if (Array.isArray(d.insights) && d.insights.length && Array.isArray(d.strategies)) {
-        const box = (tag, title, desc) => `
-            <div class="briefing-highlight-box">
-                <span class="briefing-tag">${tag}</span>
-                <div class="briefing-title-text">${title}</div>
-                <div class="briefing-desc-text">${desc}</div>
-            </div>`;
-        let h = '<div class="box-title">1. 핵심 시장 지표 요약 (유가 / 납사 / 스프레드)</div>';
-        d.insights.forEach((x, i) => { h += box('KEY INSIGHT 0' + (i + 1), esc(x.title), esc(x.desc)); });
-        h += '<div class="box-title">2. 석유화학 주요 이슈 & 실무 시사점</div>';
-        d.strategies.forEach((x, i) => {
-            h += box('STRATEGY 0' + (i + 1), esc(x.title), '• <b>시황:</b> ' + esc(x.market) + '<br>• <b>대응:</b> ' + esc(x.response));
-        });
-        document.getElementById('briefing-body').innerHTML = h;
-    }
-
-    if (Array.isArray(d.trump)) {
-        document.getElementById('trump-card').innerHTML = d.trump.length ? d.trump.map(t => `
-            <div class="trump-item">
-                <div class="trump-date">📅 ${esc(t.date)} (Truth Social)</div>
-                <div class="trump-original">"${esc(t.original)}"</div>
-                <div class="trump-korean">💬 <b>번역:</b> "${esc(t.korean)}" <a href="${esc(safeUrl(t.url))}" target="_blank" class="link-btn">원문 🔗</a></div>
-            </div>`).join('') : '<div class="trump-item"><div class="trump-korean">출처가 확인된 새 게시글이 없습니다.</div></div>';
-    }
-
-    if (Array.isArray(d.news) && d.news.length) {
-        document.getElementById('news-list').innerHTML = d.news.map((n, i) =>
-            `<li${i ? ' style="margin-top: 6px;"' : ''}><b>[${esc(n.tag)}]</b> ${esc(n.text)} <a href="${esc(safeUrl(n.url))}" target="_blank" class="link-btn" style="margin-left: 6px;">기사 보기 🔗</a></li>`
-        ).join('');
-    }
-
-    drawSparklines();
-}
-
 </script>
 
 </body>
